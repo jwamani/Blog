@@ -8,6 +8,7 @@ import models
 from database import engine
 from routes.auth import auth_router
 from routes.posts import post_router
+from routes.admin import admin_router
 
 load_dotenv()
 
@@ -35,6 +36,7 @@ def info():
 
 app.include_router(router=post_router)
 app.include_router(router=auth_router)
+app.include_router(router=admin_router)
 
 if __name__ == "__main__":
     logger.info(f"Starting server at {host}:{port}")

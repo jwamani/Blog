@@ -35,7 +35,7 @@ def authenticate_user(username: str, password: str, *, db: Session, ) -> bool|Us
     return user
 
 
-def create_access_token(username: str, *,user_id: int, user_role: str, expires_delta: timedelta) -> str:
+def create_access_token(username: str, *, user_id: int, user_role: str, expires_delta: timedelta) -> str:
     to_encode = {
         "sub": username,
         "user_id": user_id,

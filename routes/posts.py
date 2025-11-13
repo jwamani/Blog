@@ -14,11 +14,25 @@ post_router = APIRouter()
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
+async def _get_user_post(db: Session, user_id: int, post_id: int, /) -> Post:
+    if user_id is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Authenticated")
+    post = db.query(Post).filter_by(id=post_id, user_id=user_id).first()
+    if post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return post
+
 @post_router.get('/posts', status_code=status.HTTP_200_OK, response_model=ResponsePostList[PostResponse])
 async def read_all_posts(db: db_dependency, current_user: user_dependency):
     if current_user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication failed")
     posts = db.query(Post).filter(Post.user_id == current_user.get("id")).all()
+    if not posts:
+        return {
+            "status": "success",
+            "data": [],
+            "results": 0
+        }
     return {
         "status": "success",
         "data": posts,
@@ -27,35 +41,26 @@ async def read_all_posts(db: db_dependency, current_user: user_dependency):
 
 @post_router.get('/posts/{post_id}', status_code=status.HTTP_200_OK, response_model=ResponsePost[PostResponse])
 async def read_single_post(db: db_dependency, current_user: user_dependency, post_id: int = Path(gt=0)):
-    if current_user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication failed")
-    post = db.query(Post).filter_by(user_id=current_user.get("id"), id=post_id).first()
-    if post is not None:
-        return {
-            'data': post,
-            'status': 'success'
-        }
-    raise HTTPException(status_code=404, detail="Post not found")
+    post = await _get_user_post(db, current_user.get("id"), post_id)
+    return {
+        'data': post,
+        'status': 'success'
+    }
 
 
 @post_router.post('/posts', status_code=status.HTTP_201_CREATED)
 async def create_post(post: PostCreate, db: Annotated[Session, Depends(get_db)], current_user: user_dependency):
     if current_user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Authenticated")
-    todo = Post(**post.model_dump(), user_id=current_user.get("id"))
-    db.add(todo)
+    post = Post(**post.model_dump(), user_id=current_user.get("id"))
+    db.add(post)
     db.commit()
-    db.refresh(todo)
+    db.refresh(post)
 
 
 @post_router.put('/posts/{post_id}', status_code=status.HTTP_204_NO_CONTENT)
 async def update_post(db: db_dependency, post_update: PostUpdate,  current_user: user_dependency, post_id: int = Path(gt=0),):
-    if current_user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Authenticated")
-    # TODO: not completed update route
-    post = db.query(Post).filter_by(id=post_id, user_id=current_user.get("id")).first()
-    if post is None:
-        raise HTTPException(status_code=404, detail="Post not found")
+    post = await _get_user_post(db, current_user.get("id"), post_id)
     post_update = post_update.model_dump(exclude_unset=True)
 
     for k, v in post_update.items():
@@ -67,11 +72,8 @@ async def update_post(db: db_dependency, post_update: PostUpdate,  current_user:
 
 @post_router.delete('/posts/{post_id}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_post(db: db_dependency,  current_user: user_dependency, post_id: int = Path(gt=0)):
-    if current_user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Authenticated")
-    post = db.query(Post).filter_by(id=post_id, user_id=current_user.get("id")).first()
-    if post is None:
-        raise HTTPException(status_code=404, detail="Post not found")
+    post = await _get_user_post(db, current_user.get("id"), post_id)
     db.delete(post)
     db.commit()
+
 
