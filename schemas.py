@@ -22,8 +22,6 @@ class PostCreate(PostBase):
 class PostUpdate(PostBase):
     title: Optional[str] = Field(min_length=5, max_length=50, default=None)
     content: Optional[str] = Field(max_length=1000, default=None)
-    
-    
 
 
 class PostResponse(PostBase):
@@ -47,7 +45,9 @@ class PostResponse(PostBase):
         }
     }
 
+
 T = TypeVar('T')
+
 
 class ResponsePost(BaseModel, Generic[T]):
     data: T
@@ -58,6 +58,7 @@ class ResponsePostList(BaseModel, Generic[T]):
     data: list[T]
     results: int
     status: Literal['success', 'failure']
+
 
 class UserBase(BaseModel):
     id: Optional[int] = None
@@ -81,10 +82,12 @@ class UserBase(BaseModel):
         }
     }
 
+
 class Token(BaseModel):
     access_token: str
     token_type: str
     success: bool
+
 
 class UserCreate(UserBase):
     fullname: str = Field(max_length=50)
@@ -93,3 +96,19 @@ class UserCreate(UserBase):
     is_active: bool = Field(default=True)
     password: str = Field(min_length=8)
     role: str = Field(default='user')
+
+
+class UserPasswd(UserBase):
+    password: str = Field(min_length=8)
+
+
+class User(BaseModel):
+    id: int
+    fullname: str
+    username: str
+    email: str
+    is_active: bool
+    role: str
+
+class ResponseUser(BaseModel, Generic[T]):
+    data: T

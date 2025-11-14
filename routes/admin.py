@@ -35,7 +35,7 @@ async def delete_all(db: db_dependency, user: user_dependency):
     db.commit()
 
 @admin_router.delete("/post/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_post(db: db_dependency, user: user_dependency, post_id: int):
+async def delete_post(db: db_dependency, user: user_dependency, post_id: int = Path(gt=0)):
     if user is None or user.get("role") != "admin":
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication failed")
     post = db.query(Post).filter(Post.id == post_id).first()
