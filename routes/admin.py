@@ -3,7 +3,6 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Path
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import delete
 from starlette import status
 
 from database import get_db
@@ -30,7 +29,6 @@ async def read_all_posts(db: db_dependency, current_user: user_dependency):
 async def delete_all(db: db_dependency, user: user_dependency):
     if user is None or user.get("role") != "admin":
         raise HTTPException(status_code=status.HTTP_200_OK, detail="Authentication Failed")
-    # return db.execute(delete(Post))
     db.query(Post).delete(synchronize_session=False)
     db.commit()
 
