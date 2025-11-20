@@ -57,7 +57,7 @@ async def login_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depend
     }
 
 
-async def get_current_user(db: db_dependency, token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     creds_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

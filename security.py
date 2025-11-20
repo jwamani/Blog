@@ -6,6 +6,7 @@ from jose import jwt
 from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta, timezone
+from typing import Optional
 
 from models import User
 
@@ -24,7 +25,7 @@ def verify_password(plain_passwd: str, hashed_passwd: str) -> bool:
     return bcrypt_context.verify(plain_passwd, hashed_passwd)
 
 def authenticate_user(username: str, password: str, *, db: Session, ) -> bool|User:
-    user: User = db.query(User).filter(User.username.ilike(username)).first() # case-insensitive. use username.lower()
+    user: Optional[User] = db.query(User).filter(User.username.ilike(username)).first() # case-insensitive. use username.lower()
     if not user:
         verify_password(password, "dummy_hash") # waste time to prevent timing attack
         time.sleep(0.1)

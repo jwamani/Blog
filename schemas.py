@@ -3,7 +3,6 @@ from typing import Optional, Generic, TypeVar, Literal
 
 from pydantic import BaseModel, Field
 
-
 class PostBase(BaseModel):
     id: Optional[int] = None
     title: Optional[str] = None
@@ -98,9 +97,9 @@ class UserCreate(UserBase):
     role: str = Field(default='user')
 
 
-class UserPasswd(UserBase):
-    password: str = Field(min_length=8)
-
+class PasswordChange(BaseModel):
+    old_password: str = Field(min_length=8)
+    new_password: str = Field(min_length=8)
 
 class User(BaseModel):
     id: int
