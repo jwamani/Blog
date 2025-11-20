@@ -8,7 +8,10 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-from models import User
+if __package__ is None or __package__ == '':
+    from models import User
+else:
+    from .models import User
 
 load_dotenv()
 
@@ -36,12 +39,13 @@ def authenticate_user(username: str, password: str, *, db: Session, ) -> bool|Us
     return user
 
 
-def create_access_token(username: str, *, user_id: int, user_role: str, expires_delta: timedelta) -> str:
+def create_access_token(username: str, *, user_id: int, user_role: str, expire_mins: int) -> str:
     to_encode = {
         "sub": username,
         "user_id": user_id,
         "role": user_role,
     }
-    expires = datetime.now(timezone.utc) + expires_delta
-    to_encode.update({"exp": expires})
+    expires = datetime.now(timezone.utc) + timedelta(minutes=expire_mins)
+    to_encode.update({"exp": int(expires.timestamp()),
+                      "iat": int(datetime.now(timezone.utc).timestamp())})
     return jwt.encode(to_encode, algorithm=ALGO, key=SECRET_KEY)

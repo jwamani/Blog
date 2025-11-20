@@ -1,13 +1,21 @@
 from typing import Annotated
+import os
+import sys
 
 from fastapi import APIRouter, Depends, Path
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 from starlette import status
 
-from database import get_db
-from .auth import get_current_user
-from models import Post
+if __package__ is None or __package__ == '':
+    sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+    from database import get_db
+    from routes.auth import get_current_user
+    from models import Post
+else:
+    from ..database import get_db
+    from .auth import get_current_user
+    from ..models import Post
 
 admin_router = APIRouter(
     prefix="/admin",

@@ -1,4 +1,6 @@
 from typing import Annotated, Optional
+import os
+import sys
 
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
@@ -6,11 +8,19 @@ from sqlalchemy.orm import Session
 from starlette import status
 import logging
 
-from models import User
-from schemas import User as UserR, ResponseUser, PasswordChange
-from .auth import get_current_user
-from database import get_db
-from security import verify_password, gen_hash
+if __package__ is None or __package__ == '':
+    sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+    from models import User
+    from schemas import User as UserR, ResponseUser, PasswordChange
+    from routes.auth import get_current_user
+    from database import get_db
+    from security import verify_password, gen_hash
+else:
+    from ..models import User
+    from ..schemas import User as UserR, ResponseUser, PasswordChange
+    from .auth import get_current_user
+    from ..database import get_db
+    from ..security import verify_password, gen_hash
 
 logger = logging.getLogger(__name__)
 user_router = APIRouter(prefix="/users", tags=["Users"])

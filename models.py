@@ -2,7 +2,10 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, I
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.functions import func
 
-from database import Base
+if __package__ is None or __package__ == '':
+    from database import Base
+else:
+    from .database import Base
 
 
 class User(Base):

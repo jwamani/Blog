@@ -9,10 +9,18 @@ from jose import jwt, JWTError
 import os
 from datetime import timedelta
 
-from security import gen_hash, authenticate_user, create_access_token, SECRET_KEY, ALGO
-from schemas import UserCreate, Token
-from models import User
-from database import get_db
+if __package__ is None or __package__ == '':
+    import sys
+    sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+    from security import gen_hash, authenticate_user, create_access_token, SECRET_KEY, ALGO
+    from schemas import UserCreate, Token
+    from models import User
+    from database import get_db
+else:
+    from ..security import gen_hash, authenticate_user, create_access_token, SECRET_KEY, ALGO
+    from ..schemas import UserCreate, Token
+    from ..models import User
+    from ..database import get_db
 
 """
 During authentication / authorization:
@@ -47,8 +55,7 @@ async def login_for_token(form_data: Annotated[OAuth2PasswordRequestForm, Depend
     if not user:
         logger.warning(f"Failed login attempt for user: {form_data.username}")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
-    token = create_access_token(user.username, user_id=user.id, user_role=user.role,
-                                expires_delta=timedelta(MINS))
+    token = create_access_token(user.username, user_id=user.id, user_role=user.role, expire_mins=MINS)
     logger.info(f"User authenticated: {form_data.username}")
     return {
         "access_token": token,

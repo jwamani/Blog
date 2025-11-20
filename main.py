@@ -3,13 +3,25 @@ import uvicorn
 from dotenv import load_dotenv
 import os
 import logging
+import sys
 
-import models
-from database import engine
-from routes.auth import auth_router
-from routes.posts import post_router
-from routes.admin import admin_router
-from routes.users import user_router
+# Support both relative imports (when run as module) and absolute imports (when run directly)
+if __package__ is None or __package__ == '':
+    # Direct execution: python main.py
+    import models
+    from database import engine
+    from routes.auth import auth_router
+    from routes.posts import post_router
+    from routes.admin import admin_router
+    from routes.users import user_router
+else:
+    # Module execution: python -m Blog.main or fastapi dev main.py
+    from . import models
+    from .database import engine
+    from .routes.auth import auth_router
+    from .routes.posts import post_router
+    from .routes.admin import admin_router
+    from .routes.users import user_router
 
 load_dotenv()
 

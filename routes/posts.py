@@ -1,13 +1,22 @@
 from typing import Annotated
+import os
+import sys
 
 from fastapi import APIRouter, Depends, Path, HTTPException
 from sqlalchemy.orm import Session
 from starlette import status
 
-from .auth import get_current_user
-from database import get_db
-from models import Post
-from schemas import ResponsePostList, PostCreate, PostUpdate, PostResponse, ResponsePost
+if __package__ is None or __package__ == '':
+    sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+    from routes.auth import get_current_user
+    from database import get_db
+    from models import Post
+    from schemas import ResponsePostList, PostCreate, PostUpdate, PostResponse, ResponsePost
+else:
+    from .auth import get_current_user
+    from ..database import get_db
+    from ..models import Post
+    from ..schemas import ResponsePostList, PostCreate, PostUpdate, PostResponse, ResponsePost
 
 post_router = APIRouter()
 
