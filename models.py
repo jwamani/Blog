@@ -19,6 +19,7 @@ class User(Base):
     password_hash = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     role = Column(String)
+    phone_number = Column(String(15), unique=True, index=True, nullable=True)
 
     posts = relationship('Post', backref='owner', lazy='selectin')  # backref, back_populates, lazy
     comments = relationship('Comment', backref='commenter')

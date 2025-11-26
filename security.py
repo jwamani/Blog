@@ -23,14 +23,14 @@ SECRET_KEY = os.getenv("SECRET_KEY", os.urandom(32).hex())
 def gen_hash(plain_passwd: str) -> str:
     return bcrypt_context.hash(plain_passwd)
 
-
+# $2b$12$vMHP8LXWYKEZPQXTon.azuRoTbGC.WCQTaf21eE43ng39IBXNZf6y
 def verify_password(plain_passwd: str, hashed_passwd: str) -> bool:
     return bcrypt_context.verify(plain_passwd, hashed_passwd)
 
 def authenticate_user(username: str, password: str, *, db: Session, ) -> bool|User:
     user: Optional[User] = db.query(User).filter(User.username.ilike(username)).first() # case-insensitive. use username.lower()
     if not user:
-        verify_password(password, "dummy_hash") # waste time to prevent timing attack
+        verify_password(password, "$2b$12$vMHP8LXWYKEZPQXTon.azuRoTbGC.WCQTaf21eE43ng39IBXNZf6y") # waste time to prevent timing attack
         time.sleep(0.1)
         return False
     if not verify_password(password, user.password_hash):

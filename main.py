@@ -44,8 +44,7 @@ port = os.getenv("PORT")
 
 @app.get("/", status_code=200)
 def info():
-    return "Server is up and running."
-
+    return {"status": "Healthy"}
 
 app.include_router(router=post_router)
 app.include_router(router=auth_router)

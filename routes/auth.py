@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from starlette import status
-from typing import Annotated
+from typing import Annotated, Optional
 from sqlalchemy.orm import Session
 import logging
 from fastapi import HTTPException
@@ -11,6 +11,7 @@ from datetime import timedelta
 
 if __package__ is None or __package__ == '':
     import sys
+
     sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
     from security import gen_hash, authenticate_user, create_access_token, SECRET_KEY, ALGO
     from schemas import UserCreate, Token
@@ -30,7 +31,18 @@ access protected routes -> pass and decode token -> obtain user info
 
 logger = logging.getLogger(__name__)
 
-MINS = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+
+def _env_int(name: str, default: int) -> int:
+    val: Optional[str] = os.getenv(name)
+    if val is None:
+        return default
+    try:
+        return int(val)
+    except (ValueError, TypeError):
+        return default
+
+
+MINS = _env_int("ACCESS_TOKEN_EXPIRE_MINUTES", 60)
 
 auth_router = APIRouter(
     prefix="/auth",

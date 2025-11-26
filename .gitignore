@@ -3,3 +3,6 @@
 /.idea/
 *.pyc
 blog.db
+.coverage
+alembic.ini
+docs/

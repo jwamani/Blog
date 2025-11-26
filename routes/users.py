@@ -11,13 +11,13 @@ import logging
 if __package__ is None or __package__ == '':
     sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
     from models import User
-    from schemas import User as UserR, ResponseUser, PasswordChange
+    from schemas import User as UserR, ResponseUser, PasswordChange, PhoneUpdate
     from routes.auth import get_current_user
     from database import get_db
     from security import verify_password, gen_hash
 else:
     from ..models import User
-    from ..schemas import User as UserR, ResponseUser, PasswordChange
+    from ..schemas import User as UserR, ResponseUser, PasswordChange, PhoneUpdate
     from .auth import get_current_user
     from ..database import get_db
     from ..security import verify_password, gen_hash
@@ -59,3 +59,13 @@ async def change_password(db: db_dependency, user: user_dependency, updates: Pas
     db.add(user_d)
     db.commit()
     logger.info(f"Password changed for user: {user_d.username}")
+
+
+@user_router.put("/phone", status_code=status.HTTP_204_NO_CONTENT)
+async def update_phone_number(db: db_dependency, user: user_dependency, updates: PhoneUpdate):
+    user_d = check_user(user, db)
+    user_d.phone_number = updates.phone_number
+
+    db.add(user_d)
+    db.commit()
+    logger.info(f"Phone number updated for user: {user_d.username}")
