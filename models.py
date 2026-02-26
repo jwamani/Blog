@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Index
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.sql.functions import func
+from datetime import datetime
 
 if __package__ is None or __package__ == '':
     from database import Base
@@ -23,6 +24,7 @@ class User(Base):
 
     posts = relationship('Post', backref='owner', lazy='selectin')  # backref, back_populates, lazy
     comments = relationship('Comment', backref='commenter')
+    images = relationship('Image', backref='uploader', lazy='selectin')
 
 
 class Post(Base):
@@ -50,3 +52,14 @@ class Comment(Base):
     __table_args__ = (
         Index('idx_user_post', 'user_id', 'post_id', unique=True),
     )
+
+class Image(Base):
+    __tablename__ = "images"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    filename: Mapped[str] = mapped_column(String(255))
+    file_path: Mapped[str] = mapped_column(String(500))
+    content_type: Mapped[str] = mapped_column(String(100))
+    file_size: Mapped[int] = mapped_column(Integer)
+    uploaded_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))

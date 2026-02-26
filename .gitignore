@@ -6,3 +6,4 @@ blog.db
 .coverage
 alembic.ini
 docs/
+*.bak
