@@ -1,12 +1,12 @@
-from typing import Annotated, Optional
+import logging
 import os
 import sys
+from typing import Annotated, Optional
 
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 from starlette import status
-import logging
 
 if __package__ is None or __package__ == '':
     sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))

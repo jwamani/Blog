@@ -1,7 +1,8 @@
+import re
 from datetime import datetime
 from typing import Optional, Generic, TypeVar, Literal
+
 from pydantic import BaseModel, Field, field_validator
-import re
 
 
 class PostBase(BaseModel):
