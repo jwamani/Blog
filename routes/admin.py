@@ -29,14 +29,14 @@ user_dependency = Annotated[dict, Depends(get_current_user)]
 @admin_router.get("/posts")
 async def read_all_posts(db: db_dependency, current_user: user_dependency):
     if current_user is None or current_user.get("role") != "admin":
-        raise HTTPException(status_code=status.HTTP_200_OK, detail="Authentication Failed")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication Failed")
     return db.query(Post).all()
 
 
 @admin_router.delete("/posts", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_all(db: db_dependency, user: user_dependency):
     if user is None or user.get("role") != "admin":
-        raise HTTPException(status_code=status.HTTP_200_OK, detail="Authentication Failed")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication Failed")
     db.query(Post).delete(synchronize_session=False)
     db.commit()
 

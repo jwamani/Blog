@@ -39,11 +39,7 @@ class PostResponse(PostBase):
                 "content": "Bought my first summer B-tree"
             }
         },
-        "from_attributes": True,
-        "json_encoders": {
-            datetime: lambda dt: dt.strftime("%Y-%m-%dT%H:%M:%S.%f") + 'Z' if dt else None
-            # modifies the datetime object to be timezone aware
-        }
+        "from_attributes": True
     }
 
 
