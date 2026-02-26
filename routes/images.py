@@ -1,3 +1,4 @@
+
 """endpoints for file uploads and retrievals"""
 
 """
@@ -5,24 +6,24 @@ UploadFile: An abstraction over file uploads, provides metadata and file-like in
 file: actual spooled file-like object, has size, content type, filename and size
 extension comes from Path
 """
-
-from fastapi import APIRouter, UploadFile, File, HTTPException, Header
-# from fastapi.responses import JSONResponse
-
-from typing import Annotated
-from starlette import status
-from pathlib import Path
+import hashlib
 import logging
-import magic
-import uuid
 import shutil
+import uuid
+from pathlib import Path
+from typing import Annotated
+
 # for large files
 import aiofiles
-import hashlib
+import magic
+from fastapi import APIRouter, UploadFile, File, HTTPException, Header
+from starlette import status
 
-from .posts import user_dependency
 from .posts import db_dependency
+from .posts import user_dependency
 from ..models import Image
+
+# from fastapi.responses import JSONResponse
 
 image_router = APIRouter(prefix="/images", tags=["Images"])
 logger = logging.getLogger(__name__)
@@ -64,6 +65,12 @@ async def upload_validated_image(file: Annotated[UploadFile, File(description="I
                                  db: db_dependency, user: user_dependency):
     user_id = user.get("id")
     try:
+        if file.filename is None:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Filename is required.")
+
+        if file.content_type is None:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Content type is required.")
+
         if not validate_file_extension(file.filename):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid file extension.")
 
@@ -147,6 +154,8 @@ async def upload_chunk(
 
     if len(received_chunks) == total_chunks:
         # reassemble file
+        if file.filename is None:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Filename is required.")
         return await reassemble_file(file_id, total_chunks, file.filename)
 
     return {
