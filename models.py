@@ -1,7 +1,8 @@
+from datetime import datetime
+
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Index
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.sql.functions import func
-from datetime import datetime
 
 if __package__ is None or __package__ == '':
     from database import Base

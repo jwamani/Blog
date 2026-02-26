@@ -1,6 +1,6 @@
-from typing import Annotated
 import os
 import sys
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, Path
 from fastapi.exceptions import HTTPException

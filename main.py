@@ -1,9 +1,9 @@
-from fastapi import FastAPI
+import logging
+import os
+
 import uvicorn
 from dotenv import load_dotenv
-import os
-import logging
-import sys
+from fastapi import FastAPI
 
 # Support both relative imports (when run as module) and absolute imports (when run directly)
 if __package__ is None or __package__ == '':
