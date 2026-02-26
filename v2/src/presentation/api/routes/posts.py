@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
-from presentation.api.dependencies import get_create_post_use_case
-from presentation.api.schemas.post_schema import PostCreate, PostResponse
-from application.use_cases.post.create_post import CreatePostUseCase
+from v2.src.presentation.api.dependencies import get_create_post_use_case
+from v2.src.presentation.api.schemas.post_schema import PostCreate, PostResponse
+from v2.src.application.use_cases.post.create_post import CreatePostUseCase
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 

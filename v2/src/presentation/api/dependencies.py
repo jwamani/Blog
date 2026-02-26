@@ -1,13 +1,13 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from infrastructure.database.connection import get_db
-from infrastructure.repositories.sqlalchemy_user_repository import SQLAlchemyUserRepository
-from infrastructure.repositories.sqlalchemy_post_repository import SQLAlchemyPostRepository
-from application.use_cases.user.create_user import CreateUserUseCase
-from application.use_cases.user.authenticate_user import AuthenticateUserUseCase
-from application.use_cases.post.create_post import CreatePostUseCase
-from infrastructure.security.password import PasswordHasher
-from infrastructure.security.jwt_handler import JWTHandler
+from v2.src.infrastructure.database.connection import get_db
+from v2.src.infrastructure.repositories.sqlalchemy_user_repository import SQLAlchemyUserRepository
+from v2.src.infrastructure.repositories.sqlalchemy_post_repository import SQLAlchemyPostRepository
+from v2.src.application.use_cases.user.create_user import CreateUserUseCase
+from v2.src.application.use_cases.user.authenticate_user import AuthenticateUserUseCase
+from v2.src.application.use_cases.post.create_post import CreatePostUseCase
+from v2.src.infrastructure.security.password import PasswordHasher
+from v2.src.infrastructure.security.jwt_handler import JWTHandler
 
 
 def get_user_repository(db: Session = Depends(get_db)) -> SQLAlchemyUserRepository:

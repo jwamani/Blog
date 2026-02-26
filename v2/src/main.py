@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from presentation.api.routes.auth import router as auth_router
-from presentation.api.routes.posts import router as posts_router
-from infrastructure.database.connection import engine
-from infrastructure.database.models import Base
+from v2.src.presentation.api.routes.auth import router as auth_router
+from v2.src.presentation.api.routes.posts import router as posts_router
+from v2.src.infrastructure.database.connection import engine
+from v2.src.infrastructure.database.models import Base
 
 Base.metadata.create_all(bind=engine)
 

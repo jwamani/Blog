@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from presentation.api.dependencies import get_create_user_use_case, get_authenticate_user_use_case, get_jwt_handler
-from presentation.api.schemas.user_schema import UserCreate, UserResponse
-from application.use_cases.user.create_user import CreateUserUseCase
-from application.use_cases.user.authenticate_user import AuthenticateUserUseCase
-from infrastructure.security.jwt_handler import JWTHandler
+from v2.src.presentation.api.dependencies import get_create_user_use_case, get_authenticate_user_use_case, get_jwt_handler
+from v2.src.presentation.api.schemas.user_schema import UserCreate, UserResponse
+from v2.src.application.use_cases.user.create_user import CreateUserUseCase
+from v2.src.application.use_cases.user.authenticate_user import AuthenticateUserUseCase
+from v2.src.infrastructure.security.jwt_handler import JWTHandler
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
