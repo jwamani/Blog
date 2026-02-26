@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from jose import jwt
-from config import settings
+from v2.src.config import settings
 
 
 class JWTHandler:

@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.sql.functions import func
 from datetime import datetime
-from infrastructure.database.connection import Base
+from v2.src.infrastructure.database.connection import Base
 
 
 class UserModel(Base):

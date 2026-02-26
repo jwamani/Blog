@@ -1,5 +1,5 @@
-from domain.entities.user import User
-from domain.repositories.user_repository import UserRepository
+from v2.src.domain.entities.user import User
+from v2.src.domain.repositories.user_repository import UserRepository
 
 
 class CreateUserUseCase:

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from domain.entities.image import Image
+from v2.src.domain.entities.image import Image
 
 
 class ImageRepository(ABC):

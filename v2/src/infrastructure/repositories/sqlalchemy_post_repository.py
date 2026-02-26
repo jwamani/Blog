@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from domain.entities.post import Post
-from domain.repositories.post_repository import PostRepository
-from infrastructure.database.models import PostModel
+from v2.src.domain.entities.post import Post
+from v2.src.domain.repositories.post_repository import PostRepository
+from v2.src.infrastructure.database.models import PostModel
 
 
 class SQLAlchemyPostRepository(PostRepository):

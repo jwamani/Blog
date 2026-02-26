@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from domain.entities.comment import Comment
+from v2.src.domain.entities.comment import Comment
 
 
 class CommentRepository(ABC):

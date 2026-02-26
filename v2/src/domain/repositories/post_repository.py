@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from domain.entities.post import Post
+from v2.src.domain.entities.post import Post
 
 
 class PostRepository(ABC):
