@@ -14,6 +14,7 @@ if __package__ is None or __package__ == '':
     from routes.posts import post_router
     from routes.admin import admin_router
     from routes.users import user_router
+    from routes.images import image_router
 else:
     # Module execution: python -m Blog.main or fastapi dev main.py
     from . import models
@@ -39,8 +40,8 @@ logger = logging.getLogger(__name__)
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
-host = os.getenv("HOST")
-port = os.getenv("PORT")
+host = os.getenv("HOST", "localhost")
+port = os.getenv("PORT", 8000)
 
 
 @app.get("/", status_code=200)
