@@ -1,8 +1,9 @@
 from v2.src.domain.entities.user import User
 from v2.src.domain.repositories.user_repository import UserRepository
+from v2.src.infrastructure.security.password import PasswordHasher
 
 class AuthenticateUserUseCase:
-    def __init__(self, user_repo: UserRepository, password_verifier):
+    def __init__(self, user_repo: UserRepository, password_verifier: PasswordHasher):
         self.user_repo = user_repo
         self.password_verifier = password_verifier
 
